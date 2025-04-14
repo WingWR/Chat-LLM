@@ -9,7 +9,6 @@ from LLM import (
     delete_conversation,
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # 当前脚本的所在目录
 css_path = os.path.join(BASE_DIR, "style.css")
 
