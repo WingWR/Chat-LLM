@@ -1,20 +1,18 @@
 import uuid
 import datetime
 import gradio as gr
-from typing import Union
 from openai import OpenAI
-from dotenv import load_dotenv
 from module_config import MODELS
-from typing import List, Dict, Tuple, Generator
+from typing import List, Dict, Tuple, Generator, Union
+from openai.types.chat import ChatCompletion, ChatCompletionChunk
 
-# 加载环境变量
-load_dotenv()
 
 # 对话历史存储
 conversations = {}
 current_conversation_id = None
 
-def get_client(model: str):
+
+def get_client(model: str) -> OpenAI:
     """创建指定模型的客户端"""
     config = MODELS[model]
     return OpenAI(
@@ -22,13 +20,15 @@ def get_client(model: str):
         base_url=config["base_url"]
     )
 
+
 def get_current_conversation() -> Dict:
     global current_conversation_id, conversations
     if current_conversation_id is None:
         new_conversation()
     return conversations[current_conversation_id]
 
-def new_conversation():
+
+def new_conversation() -> str:
     global current_conversation_id, conversations
     conv_id = str(uuid.uuid4())
     conversations[conv_id] = {
@@ -40,7 +40,13 @@ def new_conversation():
     current_conversation_id = conv_id
     return conv_id
 
-def call_model_api(model: str, messages: List[Dict[str, str]], stream: bool) ->  Generator[str, None, None]:
+
+def call_model_api(
+    model: str,
+    messages: List[Dict[str, str]],
+    stream: bool
+) -> Union[str, ChatCompletion, Generator[ChatCompletionChunk, None, None]]:  # 用 Generator 替代直接 Stream
+    # ... 其他代码不变 ...
     """使用OpenAI SDK调用API"""
     if model not in MODELS:
         return f"错误: 未知模型 {model}"
@@ -57,15 +63,14 @@ def call_model_api(model: str, messages: List[Dict[str, str]], stream: bool) -> 
             max_tokens=2048,
             stream=stream
         )
-
-        #返回一个生成器
         return response
     except Exception as e:
         return f"API调用出错: {str(e)}"
 
+
 def chat_with_history(
     user_input: str,
-    chat_history: List[Dict[str, str]],  # 改为字典列表格式
+    chat_history: List[Dict[str, str]],
     model: str,
 ) -> Generator[Tuple[str, List[Dict[str, str]]], None, None]:
     """处理对话并获取回复（适配 type='messages' 格式）"""
@@ -79,7 +84,14 @@ def chat_with_history(
     conversation["messages"].append({"role": "user", "content": user_input})
 
     # 调用API
-    api_response = call_model_api(model, conversation["messages"], stream = True)
+    api_response = call_model_api(model, conversation["messages"], stream=True)
+
+    # 如果是错误消息，直接返回
+    if isinstance(api_response, str):
+        chat_history.append({"role": "user", "content": user_input})
+        chat_history.append({"role": "assistant", "content": api_response})
+        yield "", chat_history
+        return
 
     # 流式处理
     chat_history.append({"role": "user", "content": user_input})  # 先添加用户消息
@@ -88,7 +100,7 @@ def chat_with_history(
 
     # 遍历流式响应
     for chunk in api_response:
-        if chunk.choices[0].delta.content:
+        if hasattr(chunk, 'choices') and chunk.choices and chunk.choices[0].delta.content:
             partial_message += chunk.choices[0].delta.content
             # 更新最后一条消息（AI回复）
             chat_history[-1]["content"] = partial_message
@@ -96,6 +108,7 @@ def chat_with_history(
 
     # 流式结束后，保存完整消息到对话历史
     conversation["messages"].append({"role": "assistant", "content": partial_message})
+
 
 def load_conversation(conv_id: str) -> Tuple[List[Dict[str, str]], str]:
     """加载特定对话（适配 type='messages' 格式）"""
@@ -114,6 +127,7 @@ def load_conversation(conv_id: str) -> Tuple[List[Dict[str, str]], str]:
 
     return chat_history, conversation["model"]
 
+
 def update_conversation_list():
     """更新对话列表"""
     return gr.update(choices=[(conv["title"], conv["id"]) for conv in sorted(
@@ -121,6 +135,7 @@ def update_conversation_list():
         key=lambda x: len(x["messages"]),
         reverse=True
     )], value=current_conversation_id)
+
 
 def delete_conversation(conv_id: str):
     """删除对话"""
