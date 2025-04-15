@@ -36,5 +36,7 @@ python web.py
 ```
 
 ## Authors
-Lei Wang
-Haotian Li
+| Name        | Student ID | Faculty           |
+|-------------|------------|-------------------|
+| Lei Wang    | 2351299    | School of Software |
+| HaoTian Li  | 2354400    | School of Software |
