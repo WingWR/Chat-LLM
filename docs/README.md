@@ -2,7 +2,7 @@
 
 一个基于 [Gradio](https://www.gradio.app/) 和 的多轮对话 Web 应用，支持流式响应、历史对话管理和多模型切换。
 
-[中文版](README.md) | [English](READEME-EN.md)
+[中文版](README.md) | [English](README-EN.md)
 
 ## 功能特点
 - ✅ 支持多种以及自定义模型
@@ -18,15 +18,17 @@
 - typing, uuid, json等标准库
 
 ## 自定义模型
+新建`.env`环境,创建不同模型的API密钥
+`xxxxxx_API_KEY = xxxxxxxxx`
+
 在`module_config.py`中设置模型以及API密钥:
 ```json
 "OpenAI": {
-        "api_key": "yourOpenAIkey",
+        "api_key": "os.getenv(yourOpenAIkey)",
         "base_url": "base_url",
         "model_name": "gpt-3.5-turbo"
     }
 ```
-
 
 ## 启动应用
 ```bash

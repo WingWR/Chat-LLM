@@ -2,7 +2,7 @@
 
 A multi-turn conversation web application based on [Gradio](https://www.gradio.app/) that supports streaming responses, historical conversation management, and multi-model switching.
 
-[中文版](README.md) | [English](READEME-EN.md)
+[中文版](README.md) | [English](README-EN.md)
 
 ## Features
 - ✅ Supports multiple and custom models
@@ -18,10 +18,13 @@ The following third-party libraries are used:
 - Standard libraries such as typing, uuid, json, etc.
 
 ## Custom Models
+Create a new `.env` environment and add the API keys for different models:
+`xxxxxx_API_KEY = xxxxxxxxx`
+
 Set up models and API keys in `module_config.py`:
 ```json
 "OpenAI": {
-        "api_key": "yourOpenAIkey",
+         "api_key": "os.getenv(yourOpenAIkey)",
         "base_url": "base_url",
         "model_name": "gpt-3.5-turbo"
     }
