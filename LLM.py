@@ -28,14 +28,14 @@ def get_current_conversation() -> Dict:
     return conversations[current_conversation_id]
 
 
-def new_conversation() -> str:
+def new_conversation(current_model: str = "DeepSeek"):
     global current_conversation_id, conversations
     conv_id = str(uuid.uuid4())
     conversations[conv_id] = {
         "id": conv_id,
         "title": f"新对话 {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}",
         "messages": [{"role": "system", "content": "You are a helpful assistant."}],
-        "model": "DeepSeek"
+        "model": current_model
     }
     current_conversation_id = conv_id
     return conv_id
