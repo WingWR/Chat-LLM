@@ -10,6 +10,7 @@ from openai.types.chat import ChatCompletion, ChatCompletionChunk
 conversations = {}
 current_conversation_id = None
 
+
 def get_client(model: str) -> OpenAI:
     """创建指定模型的客户端"""
     config = MODELS[model]
@@ -17,6 +18,7 @@ def get_client(model: str) -> OpenAI:
         api_key=config["api_key"],
         base_url=config["base_url"]
     )
+
 
 def get_current_conversation() -> Dict:
     global current_conversation_id, conversations
@@ -36,6 +38,7 @@ def new_conversation(current_model: str = "DeepSeek"):
     }
     current_conversation_id = conv_id
     return conv_id
+
 
 def call_model_api(
     model: str,
@@ -62,6 +65,7 @@ def call_model_api(
         return response
     except Exception as e:
         return f"API调用出错: {str(e)}"
+
 
 def chat_with_history(
     user_input: str,
@@ -130,6 +134,7 @@ def update_conversation_list():
         key=lambda x: len(x["messages"]),
         reverse=True
     )], value=current_conversation_id)
+
 
 def delete_conversation(conv_id: str):
     """删除对话"""

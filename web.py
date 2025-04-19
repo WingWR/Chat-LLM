@@ -42,38 +42,36 @@ with gr.Blocks(
         # 右侧主聊天区
         with gr.Column(scale=4):
             chatbot = gr.Chatbot(
-                height = 500, 
-                show_copy_button = True, 
-                type = "messages",
-                elem_classes = "chatbox"
+                height=500,
+                show_copy_button=True,
+                type="messages",
+                elem_classes="chatbox"
             )
 
             with gr.Tab("文字消息"):
                 with gr.Row():
                     message = gr.Textbox(
-                        placeholder = "输入消息...",
-                        show_label = False,
-                        container = False,
-                        autofocus = True,
+                        placeholder="输入消息...",
+                        show_label=False,
+                        container=False,
+                        autofocus=True,
                     )
                     submit_btn = gr.Button("发送", variant="primary", scale=1)
 
             with gr.Tab("图片消息"):
                 with gr.Row():
                     image = gr.Image(
-                        show_fullscreen_button = False,
-                        elem_classes = "image-input"
+                        show_fullscreen_button=False,
+                        elem_classes="image-input"
                     )
                     submit_btn_2 = gr.Button("发送", variant="primary", scale=1)
 
             with gr.Tab("音频消息"):
                 with gr.Row():
                     audio = gr.Audio(
-                        elem_classes = "audio-input"
+                        elem_classes="audio-input"
                     )
                     submit_btn_3 = gr.Button("发送", variant="primary", scale=1)
-
-                
 
     # 组件交互
     submit_btn.click(
