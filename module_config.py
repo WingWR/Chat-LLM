@@ -15,5 +15,10 @@ MODELS = {
         "api_key": os.getenv("DASHSCOPE_API_KEY"),
         "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
         "model_name": "qwq-plus"
-    }
+    },
+    "ChatGpt": {
+        "api_key": os.getenv("OPENAI_API_KEY"),
+        "base_url": "https://api.openai.com/v1",
+        "model_name": "GPT-4o mini"
+    },
 }
