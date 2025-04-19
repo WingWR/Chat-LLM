@@ -2,7 +2,19 @@
     max-width: 1200px; 
 }
 
+.chatbox{
+    height: 1000px;
+}
+
 .conversation-list { 
-    height: 300px; 
+    height: 330px; 
     overflow-y: auto;
 }
+
+/* .image-input{
+    height: 170px;
+}
+
+.audio-input{
+    height: 200px;
+} */
